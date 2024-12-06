@@ -6,9 +6,10 @@ use std::{
 mod day_1;
 mod day_2;
 mod day_3;
+mod day_4;
 
 fn main() {
-    let available_puzzles = ["1", "2", "3"];
+    let available_puzzles = ["1", "2", "3", "4"];
     println!("Hello, welcome to Advent of Code 2024!");
     println!("Please select the puzzle you want to run.");
     println!("{:?}", available_puzzles);
@@ -52,6 +53,12 @@ fn main() {
             // Solution to part 2 is 100189366
             let reports = day_3::solution(path, true).unwrap();
             println!("Number of safe reports (with conditionals): {reports}");
+        }
+        "4" => {
+            let path = Path::new("./src/day_4/input.txt");
+            // Solution to part 1 is 2447
+            let finds = day_4::solution_part1(path).unwrap();
+            println!("Number of finds: {finds}");
         }
         _ => {
             println!("Not solved yet!")
