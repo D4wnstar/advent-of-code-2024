@@ -3,13 +3,15 @@ use std::{
     path::Path,
 };
 
+mod common;
 mod day_1;
 mod day_2;
 mod day_3;
 mod day_4;
+mod day_5;
 
 fn main() {
-    let available_puzzles = ["1", "2", "3", "4"];
+    let available_puzzles = ["1", "2", "3", "4", "5"];
     println!("Hello, welcome to Advent of Code 2024!");
     println!("Please select the puzzle you want to run.");
     println!("{:?}", available_puzzles);
@@ -59,6 +61,18 @@ fn main() {
             // Solution to part 1 is 2447
             let finds = day_4::solution_part1(path).unwrap();
             println!("Number of finds: {finds}");
+
+            // Solution to part 2 is 1868
+            let finds = day_4::solution_part2(path).unwrap();
+            println!("Number of X-MAS finds: {finds}");
+        }
+        "5" => {
+            let ord_path = Path::new("./src/day_5/ordering.txt");
+            let upd_path = Path::new("./src/day_5/updates.txt");
+            // Solution to part 1 is 4814 and part 2 is 5448
+            let (valid_total, invalid_total) = day_5::solution(ord_path, upd_path).unwrap();
+            println!("Total of valid middle page numbers: {valid_total}");
+            println!("Total of invalid middle page numbers: {invalid_total}");
         }
         _ => {
             println!("Not solved yet!")

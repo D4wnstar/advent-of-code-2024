@@ -137,3 +137,88 @@ pub fn solution_part1(input_file: &Path) -> Result<u32> {
 
     return Ok(finds);
 }
+
+pub fn solution_part2(input_file: &Path) -> Result<u32> {
+    if !input_file.exists() || !input_file.is_file() {
+        bail!("Invalid file '{}'!", input_file.to_string_lossy());
+    }
+
+    let mut file = fs::File::open(input_file).expect("Failed to read file. Probably invalid UTF-8");
+    let mut bytes = Vec::new();
+    file.read_to_end(&mut bytes)?;
+
+    // Read all characters into a matrix
+    let mut chars: Vec<Vec<char>> = Vec::new();
+    let mut temp: Vec<char> = Vec::new();
+
+    bytes.iter().for_each(|b| {
+        // Skip use \r and \n as to signal a new line
+        if *b == 0xD || *b == 0xA {
+            if temp.len() > 0 {
+                chars.push(temp.clone());
+                temp.clear();
+            }
+        } else {
+            let c = char::from_u32(*b as u32).unwrap();
+            temp.push(c);
+        }
+    });
+    if temp.len() > 0 {
+        chars.push(temp.clone());
+        temp.clear();
+    }
+
+    let mut finds = 0;
+
+    let rows = chars.len();
+    let cols = chars[0].len();
+
+    // Center must be A
+    // Corners need to be M or S, in diagonal pairs
+    // M|S . M|S
+    //  .  A  .
+    // S|M . S|M
+
+    /*
+        0 1 2 3 4 5 6
+      0 X M A S M S S
+      1 M M A X A X A
+      2 M S M A S S X
+      3 X X A M M X A
+      4 X A S M M A S
+      5 X A S M A S M
+      6 X A S M X A M
+    */
+
+    // Scan matrix 3 rows and columns at a time
+    for i in 0..=(rows - 3) {
+        for j in 0..=(cols - 3) {
+            let center = &chars[i + 1][j + 1];
+            if *center != 'A' {
+                continue;
+            }
+
+            let top_left = &chars[i][j];
+            let bottom_right = &chars[i + 2][j + 2];
+            if *top_left == *bottom_right
+                || (*top_left != 'M' && *top_left != 'S')
+                || (*bottom_right != 'M' && *bottom_right != 'S')
+            {
+                continue;
+            }
+
+            let top_right = &chars[i][j + 2];
+            let bottom_left = &chars[i + 2][j];
+            if *top_right == *bottom_left
+                || (*top_right != 'M' && *top_right != 'S')
+                || (*bottom_left != 'M' && *bottom_left != 'S')
+            {
+                continue;
+            }
+
+            finds += 1;
+        }
+    }
+
+    return Ok(finds);
+}
